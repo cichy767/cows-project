@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cowshed
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - SQLALCHEMY_DATABASE_URI=postgresql://username:password@db:5432/cowshed
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
