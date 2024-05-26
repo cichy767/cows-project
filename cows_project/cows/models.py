@@ -19,6 +19,8 @@ class MilkProduction(models.Model):
 
 
 class Cow(models.Model):
+    last_updated = models.DateTimeField(auto_now=True)
+
     name = models.CharField(max_length=100)
     sex = models.CharField(max_length=10)
     birthdate = models.DateTimeField()

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Cow, Weight, Feeding, MilkProduction
-
+from django.db import transaction
 
 class WeightSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,6 +29,7 @@ class CowSerializer(serializers.ModelSerializer):
         model = Cow
         fields = '__all__'
 
+    @transaction.atomic
     def create(self, validated_data):
         weight_data = validated_data.pop('weight')
         feeding_data = validated_data.pop('feeding')
@@ -47,6 +48,7 @@ class CowSerializer(serializers.ModelSerializer):
 
         return cow
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         weight_data = validated_data.pop('weight')
         feeding_data = validated_data.pop('feeding')
@@ -61,6 +63,9 @@ class CowSerializer(serializers.ModelSerializer):
         instance.birthdate = validated_data.get('birthdate', instance.birthdate)
         instance.condition = validated_data.get('condition', instance.condition)
         instance.has_calves = validated_data.get('has_calves', instance.has_calves)
+
+        if instance.last_updated != validated_data.get('last_updated'):
+            raise serializers.ValidationError('Data has changed since last retrieval.')
         instance.save()
 
         weight.mass_kg = weight_data.get('mass_kg', weight.mass_kg)
