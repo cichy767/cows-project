@@ -1,23 +1,27 @@
-version: '3.8'
+version: '3.7'
 
 services:
+  web:
+    build: .
+    command: poetry run python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_ENV=development
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/cows_db
+    depends_on:
+      - db
+
   db:
     image: postgres:13
     environment:
-      POSTGRES_USER: username
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: cowshed
+      POSTGRES_DB: cows_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-  web:
-    build: .
-    ports:
-      - "5000:5000"
-    environment:
-      - SQLALCHEMY_DATABASE_URI=postgresql://username:password@db:5432/cowshed
-    depends_on:
-      - db
 
 volumes:
   postgres_data:
