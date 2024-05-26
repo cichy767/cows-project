@@ -65,8 +65,6 @@ class CowSerializer(serializers.ModelSerializer):
         instance.condition = validated_data.get('condition', instance.condition)
         instance.has_calves = validated_data.get('has_calves', instance.has_calves)
 
-        if instance.last_updated != validated_data.get('last_updated'):
-            raise serializers.ValidationError('Data has changed since last retrieval.')
         instance.save()
 
         weight.mass_kg = weight_data.get('mass_kg', weight.mass_kg)
