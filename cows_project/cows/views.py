@@ -6,3 +6,4 @@ from .serializers import CowSerializer
 class CowViewSet(viewsets.ModelViewSet):
     queryset = Cow.objects.all()
     serializer_class = CowSerializer
+    lookup_field = 'id'

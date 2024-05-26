@@ -2,22 +2,23 @@ from rest_framework import serializers
 from .models import Cow, Weight, Feeding, MilkProduction
 from django.db import transaction
 
+
 class WeightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Weight
-        fields = '__all__'
+        fields = ['mass_kg', 'last_measured']
 
 
 class FeedingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feeding
-        fields = '__all__'
+        fields = ['amount_kg', 'cron_schedule', 'last_measured']
 
 
 class MilkProductionSerializer(serializers.ModelSerializer):
     class Meta:
         model = MilkProduction
-        fields = '__all__'
+        fields = ['last_milk', 'cron_schedule', 'amount_l']
 
 
 class CowSerializer(serializers.ModelSerializer):
@@ -27,7 +28,7 @@ class CowSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cow
-        fields = '__all__'
+        fields = ['id', 'name', 'sex', 'birthdate', 'condition', 'weight', 'feeding', 'milk_production', 'has_calves']
 
     @transaction.atomic
     def create(self, validated_data):
