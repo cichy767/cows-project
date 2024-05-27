@@ -29,8 +29,15 @@ class MilkProduction(BaseModel):
 
 
 class Cow(BaseModel):
+    MALE = 'male'
+    FEMALE = 'female'
+    SEX_CHOICES = [
+        (MALE, 'Male'),
+        (FEMALE, 'Female'),
+    ]
+
     name = models.CharField(max_length=100)
-    sex = models.CharField(max_length=10)
+    sex = models.CharField(max_length=10, choices=SEX_CHOICES)
     birthdate = models.DateTimeField()
     condition = models.CharField(max_length=100)
     weight = models.OneToOneField(Weight, on_delete=models.CASCADE)

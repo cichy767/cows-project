@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "cows_project"
+name = "nn"
 version = "0.1.0"
-description = "A Django project for managing cows"
+description = ""
 authors = ["cichy767 <vegitto767@gmail.com>"]
 readme = "README.md"
 

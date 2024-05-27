@@ -15,12 +15,10 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-dev
 
 # Copy the package tarball and install it
-COPY dist/cows_project-0.1.0.tar.gz ./
-#RUN poetry add nn-0.1.0.tar.gz
+COPY nn-0.1.0.tar.gz ./
+#RUN poetry add ./nn-0.1.0.tar.gz
 # Install the packaged project
-RUN poetry run pip install ./cows_project-0.1.0.tar.gz
-
-#RUN pip install nn-0.1.0.tar.gz
+RUN poetry run pip install nn-0.1.0.tar.gz
 
 # Copy the rest of the application code
 COPY . .
