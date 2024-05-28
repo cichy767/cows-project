@@ -6,7 +6,7 @@ FROM python:3.11
 WORKDIR /app
 
 # Install Poetry
-RUN pip install poetry
+RUN pip install poetry gunicorn
 
 # Copy pyproject.toml and poetry.lock files to the container
 COPY pyproject.toml poetry.lock ./
