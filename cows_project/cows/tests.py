@@ -35,7 +35,7 @@ def test_create_cow(api_client):
     url = reverse('cow-list')
     data = {
         "name": "Betty",
-        "sex": "Male",
+        "sex": "male",
         "birthdate": "2019-02-11T03:21:00.000000Z",
         "condition": "Healthy",
         "weight": {
@@ -73,7 +73,7 @@ def test_update_cow(api_client, create_cow):
     url = reverse('cow-detail', kwargs={'id': create_cow.id})  # Use 'id' as the lookup field
     data = {
         "name": "Bessie Updated",
-        "sex": "Female",
+        "sex": "female",
         "birthdate": "2019-02-11T03:21:00Z",
         "condition": "Healthy",
         "weight": {

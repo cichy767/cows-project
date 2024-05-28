@@ -1,6 +1,40 @@
 from rest_framework import serializers
 from .models import Cow, Weight, Feeding, MilkProduction
 from django.db import transaction
+from typing import Any, Dict
+from datetime import datetime
+from pydantic import BaseModel, Field, ValidationError
+from uuid import UUID
+
+
+class WeightModel(BaseModel):
+    mass_kg: float
+    last_measured: datetime
+
+
+class FeedingModel(BaseModel):
+    amount_kg: float
+    cron_schedule: str
+    last_measured: datetime
+
+
+class MilkProductionModel(BaseModel):
+    last_milk: datetime
+    cron_schedule: str
+    amount_l: float
+
+
+class CowModel(BaseModel):
+    id: UUID = Field(None, alias='id')
+    name: str
+    sex: str
+    birthdate: datetime
+    condition: str
+
+    has_calves: bool
+    weight: WeightModel
+    feeding: FeedingModel
+    milk_production: MilkProductionModel
 
 
 class WeightSerializer(serializers.ModelSerializer):
@@ -30,8 +64,15 @@ class CowSerializer(serializers.ModelSerializer):
         model = Cow
         fields = ['id', 'name', 'sex', 'birthdate', 'condition', 'weight', 'feeding', 'milk_production', 'has_calves']
 
+    def validate(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            CowModel(**data)
+        except ValidationError as e:
+            raise serializers.ValidationError(e.errors())
+        return data
+
     @transaction.atomic
-    def create(self, validated_data):
+    def create(self, validated_data: Dict[str, Any]) -> Cow:
         weight_data = validated_data.pop('weight')
         feeding_data = validated_data.pop('feeding')
         milk_production_data = validated_data.pop('milk_production')
@@ -46,11 +87,10 @@ class CowSerializer(serializers.ModelSerializer):
             milk_production=milk_production,
             **validated_data
         )
-
         return cow
 
     @transaction.atomic
-    def update(self, instance, validated_data):
+    def update(self, instance: Cow, validated_data: Dict[str, Any]) -> Cow:
         weight_data = validated_data.pop('weight')
         feeding_data = validated_data.pop('feeding')
         milk_production_data = validated_data.pop('milk_production')
@@ -64,7 +104,6 @@ class CowSerializer(serializers.ModelSerializer):
         instance.birthdate = validated_data.get('birthdate', instance.birthdate)
         instance.condition = validated_data.get('condition', instance.condition)
         instance.has_calves = validated_data.get('has_calves', instance.has_calves)
-
         instance.save()
 
         weight.mass_kg = weight_data.get('mass_kg', weight.mass_kg)

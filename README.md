@@ -1,4 +1,4 @@
-docker-compose run web poetry run pytest
+docker-compose run app poetry run pytest
 
 # create a distributable package
 poetry build 
