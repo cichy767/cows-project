@@ -4,7 +4,9 @@ from .models import Cow, Weight, Feeding, MilkProduction
 
 @admin.register(Cow)
 class CowAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'sex', 'birthdate', 'condition', 'has_calves')
+    list_display = (
+        'id', 'name', 'sex', 'birthdate', 'condition', 'has_calves'
+    )
     search_fields = ('name', 'sex', 'condition')
 
 

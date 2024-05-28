@@ -16,7 +16,8 @@ def create_cow():
         mass_kg=500, last_measured='2023-01-01T00:00:00Z'
     )
     feeding = Feeding.objects.create(
-        amount_kg=30, cron_schedule="0 */6 * * *", last_measured='2023-01-01T00:00:00Z'
+        amount_kg=30, cron_schedule="0 */6 * * *",
+        last_measured='2023-01-01T00:00:00Z'
     )
     milk_production = MilkProduction.objects.create(
         last_milk='2023-01-01T00:00:00Z',
@@ -24,8 +25,10 @@ def create_cow():
         amount_l=20
     )
     cow = Cow.objects.create(
-        name='Bessie', sex='Female', birthdate='2019-02-11T03:21:00Z', condition='Healthy',
-        weight=weight, feeding=feeding, milk_production=milk_production, has_calves=True
+        name='Bessie', sex='Female', birthdate='2019-02-11T03:21:00Z',
+        condition='Healthy',
+        weight=weight, feeding=feeding, milk_production=milk_production,
+        has_calves=True
     )
     return cow
 
@@ -70,7 +73,8 @@ def test_get_cows(api_client, create_cow):
 
 @pytest.mark.django_db
 def test_update_cow(api_client, create_cow):
-    url = reverse('cow-detail', kwargs={'id': create_cow.id})  # Use 'id' as the lookup field
+    url = reverse('cow-detail',
+                  kwargs={'id': create_cow.id})  # Use 'id' as the lookup field
     data = {
         "name": "Bessie Updated",
         "sex": "female",
@@ -99,7 +103,8 @@ def test_update_cow(api_client, create_cow):
 
 @pytest.mark.django_db
 def test_delete_cow(api_client, create_cow):
-    url = reverse('cow-detail', kwargs={'id': create_cow.id})  # Use 'id' as the lookup field
+    url = reverse('cow-detail',
+                  kwargs={'id': create_cow.id})  # Use 'id' as the lookup field
     response = api_client.delete(url)
     assert response.status_code == status.HTTP_204_NO_CONTENT
     assert Cow.objects.count() == 0

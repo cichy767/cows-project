@@ -42,5 +42,8 @@ class Cow(BaseModel):
     condition = models.CharField(max_length=100)
     weight = models.OneToOneField(Weight, on_delete=models.CASCADE)
     feeding = models.OneToOneField(Feeding, on_delete=models.CASCADE)
-    milk_production = models.OneToOneField(MilkProduction, on_delete=models.CASCADE)
+    milk_production = models.OneToOneField(
+        MilkProduction,
+        on_delete=models.CASCADE
+    )
     has_calves = models.BooleanField()

@@ -1,10 +1,13 @@
-from rest_framework import serializers
-from .models import Cow, Weight, Feeding, MilkProduction
-from django.db import transaction
-from typing import Any, Dict
+from collections.abc import Mapping
 from datetime import datetime
-from pydantic import BaseModel, Field, ValidationError
+from typing import Any
 from uuid import UUID
+
+from django.db import transaction
+from pydantic import BaseModel, Field, ValidationError
+from rest_framework import serializers
+
+from .models import Cow, Weight, Feeding, MilkProduction
 
 
 class WeightModel(BaseModel):
@@ -62,9 +65,10 @@ class CowSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cow
-        fields = ['id', 'name', 'sex', 'birthdate', 'condition', 'weight', 'feeding', 'milk_production', 'has_calves']
+        fields = ['id', 'name', 'sex', 'birthdate', 'condition', 'weight',
+                  'feeding', 'milk_production', 'has_calves']
 
-    def validate(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def validate(self, data: Mapping[str, Any]) -> dict[str, Any]:
         try:
             CowModel(**data)
         except ValidationError as e:
@@ -72,7 +76,7 @@ class CowSerializer(serializers.ModelSerializer):
         return data
 
     @transaction.atomic
-    def create(self, validated_data: Dict[str, Any]) -> Cow:
+    def create(self, validated_data: dict[str, Any]) -> Cow:
         weight_data = validated_data.pop('weight')
         feeding_data = validated_data.pop('feeding')
         milk_production_data = validated_data.pop('milk_production')
@@ -90,7 +94,7 @@ class CowSerializer(serializers.ModelSerializer):
         return cow
 
     @transaction.atomic
-    def update(self, instance: Cow, validated_data: Dict[str, Any]) -> Cow:
+    def update(self, instance: Cow, validated_data: dict[str, Any]) -> Cow:
         weight_data = validated_data.pop('weight')
         feeding_data = validated_data.pop('feeding')
         milk_production_data = validated_data.pop('milk_production')
@@ -101,23 +105,49 @@ class CowSerializer(serializers.ModelSerializer):
 
         instance.name = validated_data.get('name', instance.name)
         instance.sex = validated_data.get('sex', instance.sex)
-        instance.birthdate = validated_data.get('birthdate', instance.birthdate)
-        instance.condition = validated_data.get('condition', instance.condition)
-        instance.has_calves = validated_data.get('has_calves', instance.has_calves)
+        instance.birthdate = validated_data.get(
+            'birthdate',
+            instance.birthdate
+        )
+        instance.condition = validated_data.get(
+            'condition',
+            instance.condition
+        )
+        instance.has_calves = validated_data.get(
+            'has_calves',
+            instance.has_calves
+        )
         instance.save()
 
         weight.mass_kg = weight_data.get('mass_kg', weight.mass_kg)
-        weight.last_measured = weight_data.get('last_measured', weight.last_measured)
+        weight.last_measured = weight_data.get(
+            'last_measured',
+            weight.last_measured
+        )
         weight.save()
 
         feeding.amount_kg = feeding_data.get('amount_kg', feeding.amount_kg)
-        feeding.cron_schedule = feeding_data.get('cron_schedule', feeding.cron_schedule)
-        feeding.last_measured = feeding_data.get('last_measured', feeding.last_measured)
+        feeding.cron_schedule = feeding_data.get(
+            'cron_schedule',
+            feeding.cron_schedule
+        )
+        feeding.last_measured = feeding_data.get(
+            'last_measured',
+            feeding.last_measured
+        )
         feeding.save()
 
-        milk_production.last_milk = milk_production_data.get('last_milk', milk_production.last_milk)
-        milk_production.cron_schedule = milk_production_data.get('cron_schedule', milk_production.cron_schedule)
-        milk_production.amount_l = milk_production_data.get('amount_l', milk_production.amount_l)
+        milk_production.last_milk = milk_production_data.get(
+            'last_milk',
+            milk_production.last_milk
+        )
+        milk_production.cron_schedule = milk_production_data.get(
+            'cron_schedule', milk_production.cron_schedule
+        )
+        milk_production.amount_l = milk_production_data.get(
+            'amount_l',
+            milk_production.amount_l
+        )
         milk_production.save()
 
         return instance

@@ -1,9 +1,7 @@
 docker-compose run app poetry run pytest
 
-# create a distributable package
+**create a distributable package**
 poetry build 
-
-
 
 
 docker-compose run web poetry run python manage.py makemigrations
