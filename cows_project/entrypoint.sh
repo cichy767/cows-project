@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Apply database migrations
-poetry run django-admin migrate --settings=cows_project.settings
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
+#poetry run django-admin migrate --settings=cows_project.settings
 
 # Collect static files
 #poetry run django-admin collectstatic --noinput --settings=cows_project.settings

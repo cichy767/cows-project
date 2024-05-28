@@ -1,27 +1,30 @@
 services:
-  web:
-    image: cows_project:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: ["sh", "/entrypoint.sh"]
+  app:
+    build: .
+    container_name: django
+    restart: always
+    env_file:
+      - django.env
     ports:
       - "8000:8000"
     volumes:
       - .:/app
-    environment:
-      - PYTHONUNBUFFERED=1
+#    command: python manage.py runserver 0.0.0.0:8000
+    command: ["sh", "/entrypoint.sh"]
+    depends_on:
+      - db
 
   nginx:
     build:
       context: .
       dockerfile: Dockerfile.nginx
+    container_name: ngx
     ports:
       - "80:80"
-    depends_on:
-      - web
     volumes:
-      - .:/app
+      - ../nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
 
   db:
     image: postgres:13
