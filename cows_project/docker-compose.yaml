@@ -1,8 +1,6 @@
 services:
-  app:
+  web:
     build: .
-    container_name: django
-    restart: always
     env_file:
       - django.env
     expose:
@@ -22,8 +20,9 @@ services:
       - "8080:8080"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./static:/app/static
     depends_on:
-      - app
+      - web
 
   db:
     image: postgres:13

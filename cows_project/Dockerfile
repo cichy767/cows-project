@@ -1,27 +1,30 @@
-FROM python:3.11-slim-buster
+FROM python:3.11-slim
 
-RUN apt-get update && apt-get upgrade -y
-RUN pip install poetry gunicorn
+ENV USER=appuser
+ENV USERGROUP=bootgrp
+ENV PYTHONUNBUFFERED=1
 
-ENV APP_ROOT /app
-WORKDIR ${APP_ROOT}
+# Set work directory
+WORKDIR /app
 
-ARG POETRY_VERSION=1.4.2
-RUN pip install poetry==$POETRY_VERSION
-RUN poetry config virtualenvs.create false
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    curl \
+    && apt-get clean
 
-COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-dev
 
-COPY . ${APP_ROOT}
+# Copy the .whl file into the container
+COPY dist/cows_project-0.1.0-py3-none-any.whl /app/
+
+# Install the .whl package
+RUN pip install /app/cows_project-0.1.0-py3-none-any.whl
+# Expose the port the app runs on
+EXPOSE 8000
+
+#RUN groupadd -r -g 999 $USERGROUP && useradd -m -u 999 -g $USERGROUP $USER
+#USER $USER
 
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-
-# Set environment variables
-ENV PYTHONUNBUFFERED 1
-
-# Define the entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
-#CMD ["gunicorn", "-c", "gunicorn_config.py", "config.wsgi:application"]

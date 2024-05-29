@@ -1,3 +1,5 @@
 .idea
 .xml
 .gz
+/dist/
+/static/
