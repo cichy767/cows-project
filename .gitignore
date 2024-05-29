@@ -1,5 +1,5 @@
 .idea
 .xml
 .gz
-/dist/
-/static/
+/cows_project/dist/
+/cows_project/static/
