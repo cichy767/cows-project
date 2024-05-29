@@ -15,9 +15,9 @@
 
 
 ## Apply database migrations
-echo IM HERE
-ls -a
-echo IM OUT
+#echo IM HERE
+#ls -a
+#echo IM OUT
 ##poetry run django-admin migrate --settings=cows_project.settings
 #
 ## Collect static files
