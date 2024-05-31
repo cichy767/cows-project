@@ -1,12 +1,26 @@
-docker-compose run app poetry run pytest
+# Python django project focused on managing Cows!
 
-**create a distributable package**
+**To start the project run command:** 
+
+```docker-compose up```
+
+**Create a distributable package**
+
 poetry build 
 
+**Check swagger documentation:**
 
-docker-compose run web poetry run python manage.py makemigrations
-docker-compose run web poetry run python manage.py migrate
+localhost:8080/swagger
 
+**Build app package:**
+- creating prod env\
+poetry install --no-dev
+- creating package for prod\
+poetry build                    
+- creating test env\
+poetry install                  
 
-docker-compose down
+**Some notes:**
+
+docker-compose down\
 docker-compose down -v

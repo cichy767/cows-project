@@ -1,6 +1,8 @@
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     env_file:
       - django.env
     expose:
@@ -8,6 +10,18 @@ services:
     volumes:
       - .:/app
     command: ["sh", "/entrypoint.sh"]
+    depends_on:
+      - db
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    env_file:
+      - django.env
+    volumes:
+      - .:/app
+    command: [ "sh", "/entrypoint_test.sh" ]
     depends_on:
       - db
 
