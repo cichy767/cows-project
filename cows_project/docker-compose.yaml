@@ -1,0 +1,51 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - django.env
+    expose:
+      - "8000"
+    volumes:
+      - .:/app
+    command: ["sh", "/entrypoint.sh"]
+    depends_on:
+      - db
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    env_file:
+      - django.env
+    volumes:
+      - .:/app
+    command: [ "sh", "/entrypoint_test.sh" ]
+    depends_on:
+      - db
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: ngx
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./static:/var/www/static/
+    depends_on:
+      - web
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: cows_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
