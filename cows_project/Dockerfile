@@ -22,9 +22,16 @@ COPY dist/cows_project-0.1.0-py3-none-any.whl /app/
 RUN pip install /app/cows_project-0.1.0-py3-none-any.whl
 # Expose the port the app runs on
 EXPOSE 8000
+RUN groupadd -r -g 999 $USERGROUP && useradd -m -u 999 -g $USERGROUP $USER
 
-#RUN groupadd -r -g 999 $USERGROUP && useradd -m -u 999 -g $USERGROUP $USER
-#USER $USER
+RUN mkdir -p /var/www/static/
+RUN chown -R $USER:$USERGROUP \
+    /var/www/static \
+    /app
 
 COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+# Switch to non-root user
+USER $USER
+
 ENTRYPOINT ["/entrypoint.sh"]
