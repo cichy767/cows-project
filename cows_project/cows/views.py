@@ -12,7 +12,9 @@ class CowViewSet(viewsets.ModelViewSet):
     search_fields = ['sex']
 
     def get_queryset(self):
-        queryset = Cow.objects.select_related('weight', 'feeding', 'milk_production')
+        queryset = Cow.objects.select_related(
+            'weight', 'feeding', 'milk_production'
+        )
         sex = self.request.query_params.get('sex')
         if sex:
             queryset = queryset.filter(sex=sex)

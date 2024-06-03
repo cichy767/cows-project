@@ -27,6 +27,8 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8080']
+
 
 # Application definition
 
@@ -119,7 +121,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
     'VALIDATOR_URL': None,
-    'DEFAULT_API_URL': 'http://localhost:8080/api/',
+    # 'DEFAULT_API_URL': 'http://localhost:8080/api/',
+    'DEFAULT_API_URL': os.environ.get('SWAGGER_URL'),
     'SECURITY_DEFINITIONS': {
         'Basic': {
             'type': 'basic'

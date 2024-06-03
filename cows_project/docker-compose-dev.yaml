@@ -1,9 +1,15 @@
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    env_file:
+      - django.env
     command: poetry run python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
+#      - ./static:/var/www/static
+#      - ./static:/app/static
     ports:
       - "8000:8000"
     environment:
